@@ -86,9 +86,9 @@ public class Agent : MonoBehaviour
                 awayDir.Normalize();
 
                 Vector3 newVelocity = awayDir * escapeSpeed;
-                newVelocity.y = rb.velocity.y;
-                rb.velocity = newVelocity;
-                Face(rb.velocity);
+                newVelocity.y = rb.linearVelocity.y;
+                rb.linearVelocity = newVelocity;
+                Face(rb.linearVelocity);
             }
         }
         else
@@ -97,10 +97,10 @@ public class Agent : MonoBehaviour
             agent.isStopped = false;
             agent.SetDestination(target.position);
             Vector3 desiredVelocity = agent.desiredVelocity;
-            Vector3 newVelocity = rb.velocity;
+            Vector3 newVelocity = rb.linearVelocity;
             newVelocity.x = desiredVelocity.x;
             newVelocity.z = desiredVelocity.z;
-            rb.velocity = newVelocity;
+            rb.linearVelocity = newVelocity;
             Face(newVelocity);
         }
 }
@@ -117,7 +117,7 @@ public class Agent : MonoBehaviour
 
 
         // reset velocity and state
-        rb.velocity = Vector3.zero; 
+        rb.linearVelocity = Vector3.zero; 
         Knockback = false; 
         knockbackTimer = 0f;
         isEscaping = false;
