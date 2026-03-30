@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
 
     public bool IsGrounded => controller.isGrounded;
 
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -47,7 +48,13 @@ public class PlayerController : MonoBehaviour
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
-       
+        if (IsGrounded)
+        {
+            Debug.LogError("grounded");
+        }
+        else {
+            Debug.LogError("not grounded");
+        }
     }
 
     private void ApplyGravity()
@@ -62,8 +69,7 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyMovement()
     {
-        controller.Move(moveSpeed * Time.deltaTime * moveDir);
-
-        controller.Move(velocity * Time.deltaTime);
+        Vector3 Movement = (moveDir * moveSpeed) + velocity;
+        controller.Move(Movement * Time.deltaTime);
     }
 }
