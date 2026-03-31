@@ -1,3 +1,4 @@
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -5,9 +6,10 @@ public class PlayerController : MonoBehaviour
     [Header("References")]
     public Transform model;
     public Transform cameraTransform;
+    public playerStats stats;
 
     [Header("Movement Settings")]
-    public float moveSpeed = 6f;
+    public float moveSpeed;
     public float gravity = -20f;
 
     [Header("Jump Settings")]
@@ -23,6 +25,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        moveSpeed = stats.moveSpeed;
     }
 
     void Update()
@@ -50,10 +53,10 @@ public class PlayerController : MonoBehaviour
         }
         if (IsGrounded)
         {
-            Debug.LogError("grounded");
+            //Debug.LogError("grounded");
         }
         else {
-            Debug.LogError("not grounded");
+            //Debug.LogError("not grounded");
         }
     }
 
