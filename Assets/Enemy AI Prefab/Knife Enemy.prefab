@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 8301087606106654971}
   - component: {fileID: 1480960058414679413}
   - component: {fileID: 5231925746174391303}
+  - component: {fileID: 913453856116316406}
   - component: {fileID: 8712748252286510810}
   - component: {fileID: 485221402918668119}
   m_Layer: 0
@@ -202,6 +203,28 @@ CapsuleCollider:
   m_Height: 1.85
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!95 &913453856116316406
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264346990334706739}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: bdd7a03fd93bf2d4cb6babd63ceabee8, type: 3}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &8712748252286510810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,7 +255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9eb3036fb929914f8863961a0c832cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KnifeEnemy
-  maxHealth: 0
+  maxHealth: 80
   attackDamage: 0
   attackRange: 0
   attackCooldown: 0

@@ -43,7 +43,7 @@ public class BaseEnemy : MonoBehaviour
         if (distanceToPlayer <= detectionRange)
             HandleCombat(distanceToPlayer);
 
-        UpdateAnimations(distanceToPlayer);
+        // UpdateAnimations(distanceToPlayer);
     }
 
     protected virtual void HandleCombat(float distanceToPlayer)

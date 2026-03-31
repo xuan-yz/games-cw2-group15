@@ -623,6 +623,7 @@ GameObject:
   - component: {fileID: 70440299931097179}
   - component: {fileID: 8587638766688405549}
   - component: {fileID: 5905920752027599047}
+  - component: {fileID: -7474797503623974645}
   - component: {fileID: 925546862587204897}
   - component: {fileID: 6788739347939258830}
   - component: {fileID: 4010493843406601455}
@@ -698,6 +699,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 48
   m_CollisionDetection: 0
+--- !u!95 &-7474797503623974645
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528899749344283343}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!136 &925546862587204897
 CapsuleCollider:
   m_ObjectHideFlags: 0

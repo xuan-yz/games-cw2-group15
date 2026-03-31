@@ -14,7 +14,7 @@ public class KnifeEnemy : BaseEnemy
         attackDamage = 15f;
         attackRange = 1.4f;
         attackCooldown = 0.7f;
-        moveSpeed = 4.5f;
+        moveSpeed = 45f;
 
         base.Start();
     }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2470184014705349898}
   - component: {fileID: 4758801975236438330}
   - component: {fileID: 8531017104699473176}
-  - component: {fileID: 1526781448355311814}
+  - component: {fileID: -7983829785542572079}
   - component: {fileID: 214222646405161830}
   m_Layer: 0
   m_Name: Fist Enemy
@@ -109,24 +109,28 @@ CapsuleCollider:
   m_Height: 1.85
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
---- !u!114 &1526781448355311814
-MonoBehaviour:
+--- !u!95 &-7983829785542572079
+Animator:
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 454327118823079217}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ff922042e9350a4c8294188e3614c92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::baseEnemy
-  maxHealth: 0
-  attackDamage: 0
-  attackRange: 0
-  attackCooldown: 0
-  moveSpeed: 0
-  detectionRange: 15
+  m_Avatar: {fileID: 9000000, guid: a6e4323446051b94e961883501d13337, type: 3}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &214222646405161830
 MonoBehaviour:
   m_ObjectHideFlags: 0
