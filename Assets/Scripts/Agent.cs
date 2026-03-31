@@ -17,9 +17,7 @@ public class Agent : MonoBehaviour
     private Transform target;
     private Transform player;
     private Rigidbody rb;
-
     
-
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
