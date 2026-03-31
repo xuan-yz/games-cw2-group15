@@ -50,10 +50,10 @@ public class PlayerController : MonoBehaviour
         }
         if (IsGrounded)
         {
-            Debug.LogError("grounded");
+            //Debug.LogError("grounded");
         }
         else {
-            Debug.LogError("not grounded");
+            //Debug.LogError("not grounded");
         }
     }
 
