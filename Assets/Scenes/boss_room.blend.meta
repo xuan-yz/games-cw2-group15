@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< Updated upstream:Assets/Scenes/boss_room.blend.meta
 guid: 4ccd7490b05a3f14a8b0b5c4ca85693e
+=======
+guid: a1ec706b8c7489e44ac675e4194e51db
+>>>>>>> Stashed changes:Assets/Scenes/special/boss_room.blend.meta
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -35,7 +39,11 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
+<<<<<<< Updated upstream:Assets/Scenes/boss_room.blend.meta
     addColliders: 0
+=======
+    addColliders: 1
+>>>>>>> Stashed changes:Assets/Scenes/special/boss_room.blend.meta
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importPhysicalCameras: 1

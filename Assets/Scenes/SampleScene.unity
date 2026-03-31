@@ -181,13 +181,18 @@ MonoBehaviour:
   attempts_spawn: 50
   least_distance: 70
   max_distance: 150
+<<<<<<< Updated upstream
   Start_spawn: 1
+=======
+  Start_spawn: 0
+>>>>>>> Stashed changes
   Road_length: 10
   wall_height: 10
   spawned_prefabs: []
   road_bounds: []
   room_bounds: []
   turning_points: []
+<<<<<<< Updated upstream
 --- !u!114 &783678111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,6 +225,8 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
+=======
+>>>>>>> Stashed changes
 --- !u!1 &838699018
 GameObject:
   m_ObjectHideFlags: 0

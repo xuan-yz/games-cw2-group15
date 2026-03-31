@@ -9,10 +9,17 @@ TagManager:
   serializedVersion: 3
   tags:
   - Boss
+<<<<<<< Updated upstream
   - Turrning
   - SpawnPoint
   - BossRoom
   - Room
+>>>>>>> Stashed changes
+=======
+  - Enemy
+  - Turrning
+  - Room
+  - SpawnPoint
 >>>>>>> Stashed changes
   layers:
   - Default
