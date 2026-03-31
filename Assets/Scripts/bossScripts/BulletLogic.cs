@@ -4,6 +4,7 @@ public class BulletLogic : MonoBehaviour
 {
 
     public float life =1;
+    public int damage = 10;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -11,12 +12,16 @@ public class BulletLogic : MonoBehaviour
         Destroy(gameObject, life);
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
+        //layer UI/health logic may be on a parent object instead of the collider itself.
+        if (collision.CompareTag("Player"))
+        {
+            playerUI ui = collision.gameObject.GetComponentInParent<playerUI>();
+            ui.TakeDamage(damage);
+            Destroy(gameObject); 
+        }
 
-        
-        
-     
     } 
 
 
