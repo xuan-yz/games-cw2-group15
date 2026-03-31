@@ -22,18 +22,9 @@ public class playerUI : MonoBehaviour
     public playerStats stats; 
     void Start()
     {
-<<<<<<< Updated upstream
         stats.ResetStats();
         UpdateUI(); 
         Time.timeScale = 1;
-=======
-        Cursor.lockState = CursorLockMode.Locked;
-        stats.ResetStats();
-        Time.timeScale = 1;
-        UpdateUI(); 
-
-
->>>>>>> Stashed changes
     }
 
     // Update is called once per frame
@@ -61,14 +52,9 @@ public void UpdateUI()
     public void TakeDamage(int damage)
     {
         stats.currentHP -= damage;
-<<<<<<< Updated upstream
         if(stats.currentHP < 0)
         {
             stats.currentHP = 0;
-=======
-        if(stats.currentHP <= 0)
-        {
->>>>>>> Stashed changes
             TriggerGameOver();
         }
 
@@ -126,11 +112,7 @@ public void UpdateUI()
     }
 
     public void IncreaseMS(){
-<<<<<<< Updated upstream
         stats.moveSpeed += 5;
-=======
-        stats.moveSpeed += 10;
->>>>>>> Stashed changes
         Time.timeScale = 1;
         levelUpPanel.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;

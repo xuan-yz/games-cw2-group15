@@ -19,10 +19,7 @@ public class GunLogic : MonoBehaviour
         {
             
             GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-            if (bullet.GetComponent<BulletLogic>() == null)
-            {
-                bullet.AddComponent<BulletLogic>();
-            }
+            bullet.AddComponent<BulletLogic>();
             bullet.GetComponent<Rigidbody>().linearVelocity = bulletSpawnPoint.forward * bulletSpeed;
             
             
@@ -36,10 +33,7 @@ public class GunLogic : MonoBehaviour
         {
             
             GameObject bullet = Instantiate(punchPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-            if (bullet.GetComponent<BulletLogic>() == null)
-            {
-                bullet.AddComponent<BulletLogic>();
-            }
+            bullet.AddComponent<BulletLogic>();
             bullet.GetComponent<Rigidbody>().linearVelocity = bulletSpawnPoint.forward * punchSpeed;
             
             
