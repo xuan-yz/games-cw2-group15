@@ -2,8 +2,18 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
+<<<<<<< Updated upstream
   serializedVersion: 2
   tags: []
+=======
+  serializedVersion: 3
+  tags:
+  - Boss
+  - Turrning
+  - SpawnPoint
+  - BossRoom
+  - Room
+>>>>>>> Stashed changes
   layers:
   - Default
   - TransparentFX
