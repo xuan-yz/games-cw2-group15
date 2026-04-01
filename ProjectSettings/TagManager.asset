@@ -5,7 +5,11 @@ TagManager:
   serializedVersion: 3
   tags:
   - Boss
-  - Enemy
+  - Turrning
+  - BossRoom
+  - Room
+  - SpawnPoint
+  - target
   layers:
   - Default
   - TransparentFX

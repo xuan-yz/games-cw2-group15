@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using System.Linq;
+using UnityEngine.AI;
+using Unity.AI.Navigation;
 
 public class Room_spawn : MonoBehaviour
 {
@@ -20,11 +22,24 @@ public class Room_spawn : MonoBehaviour
         private float Road_width = 0.1f;
         public float wall_height = 10f;
         public List<GameObject> spawned_prefabs = new List<GameObject>();
+        public List<GameObject> road_prefabs = new List<GameObject>();
         public List<Bounds> road_bounds = new List<Bounds>();
         public List<Bounds> room_bounds = new List<Bounds>();
         public List<GameObject> turning_points = new List<GameObject>();
+        public Material wall_material = null;
+        public Material floor_material = null;
     void Start()
     {
+        wall_material = Resources.Load<Material>("wall_material");
+        if (wall_material == null)
+        {
+            Debug.LogWarning("Failed to load wall material. Please ensure 'wall_material' exists in the Resources folder.");
+        }
+        floor_material = Resources.Load<Material>("floor_material");
+        if (floor_material == null)
+        {
+            Debug.LogWarning("Failed to load floor material. Please ensure 'floor_material' exists in the Resources folder.");
+        }
         Start_spawn = false;
     }
 // Update is called once per frame
@@ -41,6 +56,7 @@ public class Room_spawn : MonoBehaviour
         yield return null;
         Generate_spawn();
         Generate_room();
+        Generate_boss_room();
         Generate_road();
 
         GenerateRoom_wall(road_bounds, room_bounds);
@@ -60,11 +76,24 @@ public class Room_spawn : MonoBehaviour
                 Generatewall_turning(turning.transform.position, road_bounds);
         }
         CreateCorridorWall();
+
+        foreach (GameObject road in road_prefabs)
+        {
+            road.GetComponent<Renderer>().material = floor_material;
+        }
+        foreach (GameObject turning in turning_points)
+        {
+            turning.GetComponent<Renderer>().material = floor_material;
+        }
+
+
+        place_navigation();
     }
     
     void Clean_all()
     {
         spawned_prefabs.Clear();
+        road_prefabs.Clear();
         road_bounds.Clear();
         room_bounds.Clear();
         turning_points.Clear();
@@ -173,7 +202,7 @@ public class Room_spawn : MonoBehaviour
             roadPiece.transform.localScale = new Vector3(Road_length, Road_width, length- Road_length);
             road_bounds.Add(roadPiece.GetComponent<Renderer>().bounds);
         }
-
+        road_prefabs.Add(roadPiece);
 
         createdSegments.Add((hashKey, hashKey));
         return roadPiece;
@@ -222,6 +251,168 @@ public class Room_spawn : MonoBehaviour
                 else
                 {
                     Turning_wall.transform.localScale = new Vector3(Road_length, wall_height, 0.3f);
+                }
+                Turning_wall.GetComponent<Renderer>().material = wall_material;
+            }
+            else
+            {
+                int a=0;
+                foreach(Bounds roomBound in room_bounds)
+                {
+                    if (roomBound.Contains(wall))
+                    {
+                        a++;
+                        break;
+                    }
+                }
+                if (a == 0)
+                {
+                    
+                   if (Mathf.Approximately(wall.z, corner.z))
+                    {
+                        if (Mathf.Approximately(wall.x, corner.x + Road_length / 2f+0.1f))
+                        {
+                            List<float> distances = new List<float>();
+                            Ray ray = new Ray(new Vector3(wall.x + 0.5f, 0, wall.z), Vector3.right);
+                            foreach(Bounds roomBound in room_bounds)
+                            {
+                                if (roomBound.IntersectRay(ray, out float distance))
+                                {
+                                    distances.Add(distance);
+                                }
+                            }
+                            foreach (GameObject turning in turning_points)
+                            {
+                                Bounds turning_bound = turning.GetComponent<Renderer>().bounds;
+                                if (turning_bound.IntersectRay(ray, out float distance))
+                                {
+                                    distances.Add(distance);
+                                }
+                            }
+                            if (distances.Count > 0)
+                            {
+                                float distance = distances.Min();
+                                GameObject Corridor_lwall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                                GameObject Corridor_rwall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                                Corridor_lwall.name = "Corridor_lwall(Wall)";
+                                Corridor_rwall.name = "Corridor_rwall(Wall)";
+                                Corridor_lwall.transform.localScale = new Vector3(distance, wall_height, 0.1f);
+                                Corridor_rwall.transform.localScale = new Vector3(distance, wall_height, 0.1f);
+                                Corridor_lwall.transform.position = new Vector3(wall.x-0.1f + distance / 2f, wall_height / 2f, wall.z+Road_length/2f);
+                                Corridor_rwall.transform.position = new Vector3(wall.x-0.1f + distance / 2f, wall_height / 2f, wall.z-Road_length/2f);
+                                Corridor_lwall.GetComponent<Renderer>().material = wall_material;
+                                Corridor_rwall.GetComponent<Renderer>().material = wall_material;
+                            }
+                            
+                        }
+                        else
+                        {
+                            List<float> distances = new List<float>();
+                            Ray ray = new Ray(new Vector3(wall.x - 0.5f, 0, wall.z), Vector3.left);
+                            foreach(Bounds roomBound in room_bounds)
+                            {
+                                if (roomBound.IntersectRay(ray, out float distance))
+                                {
+                                    distances.Add(distance);
+                                }
+                            }
+                            foreach (GameObject turning in turning_points)
+                            {
+                                Bounds turning_bound = turning.GetComponent<Renderer>().bounds;
+                                if (turning_bound.IntersectRay(ray, out float distance))
+                                {
+                                    distances.Add(distance);
+                                }
+                            }
+                            if (distances.Count > 0)
+                            {
+                                float distance = distances.Min();
+                                GameObject Corridor_lwall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                                GameObject Corridor_rwall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                                Corridor_lwall.name = "Corridor_lwall(Wall)";
+                                Corridor_rwall.name = "Corridor_rwall(Wall)";
+                                Corridor_lwall.transform.localScale = new Vector3(distance, wall_height, 0.1f);
+                                Corridor_rwall.transform.localScale = new Vector3(distance, wall_height, 0.1f);
+                                Corridor_lwall.transform.position = new Vector3(wall.x+0.1f - distance / 2f, wall_height / 2f, wall.z+Road_length/2f);
+                                Corridor_rwall.transform.position = new Vector3(wall.x+0.1f - distance / 2f, wall_height / 2f, wall.z-Road_length/2f);
+                                Corridor_lwall.GetComponent<Renderer>().material = wall_material;
+                                Corridor_rwall.GetComponent<Renderer>().material = wall_material;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Mathf.Approximately(wall.z, corner.z + Road_length / 2f+0.1f))
+                        {
+                            List<float> distances = new List<float>();
+                            Ray ray = new Ray(new Vector3(wall.x, 0, wall.z + 0.5f), Vector3.forward);
+                            foreach(Bounds roomBound in room_bounds)
+                            {
+                                if (roomBound.IntersectRay(ray, out float distance))
+                                {
+                                    distances.Add(distance);
+                                }
+                            }
+                                foreach (GameObject turning in turning_points)
+                                {
+                                    Bounds turning_bound = turning.GetComponent<Renderer>().bounds;
+                                    if (turning_bound.IntersectRay(ray, out float distance))
+                                    {
+                                        distances.Add(distance);
+                                    }
+                                }
+                            if (distances.Count > 0){
+                                float distance = distances.Min();
+                                GameObject Corridor_lwall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                                GameObject Corridor_rwall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                                Corridor_lwall.name = "Corridor_lwall(Wall)";
+                                Corridor_rwall.name = "Corridor_rwall(Wall)";
+                                Corridor_lwall.transform.localScale = new Vector3(0.1f, wall_height, distance);
+                                Corridor_rwall.transform.localScale = new Vector3(0.1f, wall_height, distance);
+                                Corridor_lwall.transform.position = new Vector3(wall.x+Road_length/2f, wall_height / 2f, wall.z+0.1f + distance / 2f);
+                                Corridor_rwall.transform.position = new Vector3(wall.x-Road_length/2f, wall_height / 2f, wall.z+0.1f + distance / 2f);
+                                Corridor_lwall.GetComponent<Renderer>().material = wall_material;
+                                Corridor_rwall.GetComponent<Renderer>().material = wall_material;
+                            }
+                                
+                        }
+                        else
+                        {
+                            Ray ray = new Ray(new Vector3(wall.x, 0, wall.z - 0.5f), Vector3.back);
+                            List<float> distances = new List<float>();
+
+                            foreach(Bounds roomBound in room_bounds)
+                            {
+                                
+                                if (roomBound.IntersectRay(ray, out float distance))
+                                {
+                                    distances.Add(distance);
+                                }
+                            }
+                            foreach (GameObject turning in turning_points)
+                            {
+                                Bounds turning_bound = turning.GetComponent<Renderer>().bounds;
+                                if (turning_bound.IntersectRay(ray, out float distance))
+                                {
+                                    distances.Add(distance);
+                                }
+                            }
+                            if (distances.Count > 0)
+                            {
+                                float distance = distances.Min();
+                                GameObject Corridor_lwall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                                GameObject Corridor_rwall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                                Corridor_lwall.name = "Corridor_lwall(Wall)";
+                                Corridor_rwall.name = "Corridor_rwall(Wall)";
+                                Corridor_lwall.transform.localScale = new Vector3(0.1f, wall_height, distance);
+                                Corridor_rwall.transform.localScale = new Vector3(0.1f, wall_height, distance);
+                                Corridor_lwall.transform.position = new Vector3(wall.x+Road_length/2f, wall_height / 2f, wall.z+0.1f - distance / 2f);
+                                Corridor_rwall.transform.position = new Vector3(wall.x-Road_length/2f, wall_height / 2f, wall.z+0.1f - distance / 2f);
+                                Corridor_lwall.GetComponent<Renderer>().material = wall_material;
+                                Corridor_rwall.GetComponent<Renderer>().material = wall_material;
+                            }
+                        }
+                    }
                 }
             }
             else
@@ -426,6 +617,8 @@ public class Room_spawn : MonoBehaviour
                             Corridor_rwall.transform.localScale = new Vector3(0.1f, wall_height, maxZ - minZ);
                             Corridor_lwall.transform.position = new Vector3(roadBound.center.x - Road_length / 2f, wall_height / 2f, (maxZ + minZ) / 2f);
                             Corridor_rwall.transform.position = new Vector3(roadBound.center.x + Road_length / 2f, wall_height / 2f, (maxZ + minZ) / 2f);
+                            Corridor_lwall.GetComponent<Renderer>().material = wall_material;
+                            Corridor_rwall.GetComponent<Renderer>().material = wall_material;
                         }
                     }
                     else
@@ -444,6 +637,8 @@ public class Room_spawn : MonoBehaviour
                             Corridor_rwall.transform.localScale = new Vector3(maxX - minX, wall_height, 0.1f);
                             Corridor_lwall.transform.position = new Vector3((maxX + minX) / 2f, wall_height / 2f, roadBound.center.z - Road_length / 2f);
                             Corridor_rwall.transform.position = new Vector3((maxX + minX) / 2f, wall_height / 2f, roadBound.center.z + Road_length / 2f);
+                            Corridor_lwall.GetComponent<Renderer>().material = wall_material;
+                            Corridor_rwall.GetComponent<Renderer>().material = wall_material;
                         }
 
                     }
@@ -530,6 +725,8 @@ public class Room_spawn : MonoBehaviour
                     }
                     Walls.Add(wall_up.GetComponent<Renderer>().bounds);
                     Walls.Add(wall_down.GetComponent<Renderer>().bounds);
+                    wall_up.GetComponent<Renderer>().material = wall_material;
+                    wall_down.GetComponent<Renderer>().material = wall_material;
                 }
             }
         }
@@ -578,6 +775,7 @@ public class Room_spawn : MonoBehaviour
                         length = Mathf.Abs(room.max.z - room.min.z);
                         room_wall.transform.localScale = new Vector3(length, wall_height, 0.1f);
                     }
+                    room_wall.GetComponent<Renderer>().material = wall_material;
                 }
             }
         }
@@ -628,6 +826,35 @@ public class Room_spawn : MonoBehaviour
         instance.tag = "SpawnPoint";
         spawned_prefabs.Add(instance);
         room_bounds.Add(GetRoomBounds(instance));
+    }
+    void Generate_boss_room()
+    {
+            string assetPath = $"Assets\\Scenes\\special\\boss_room.blend";
+            GameObject boss_room = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+            if (boss_room == null)
+            {
+                Debug.LogError($"Cannot load boss room prefab: {assetPath}");
+                return;
+            }
+            for(int i=0; i<attempts_spawn*2; i++)
+            {
+                float x = Random.Range(minX, maxX);
+                float z = Random.Range(minZ, maxZ);
+                Vector3 position = new Vector3(x, 0, z);
+                Vector3 halfExtents = new Vector3(1.5f*least_distance, 0.1f, 1.5f*least_distance);
+                Vector3 halfExtents_max = new Vector3(1.2f*max_distance, 0.1f, 1.2f*max_distance);
+                if (!Physics.CheckBox(position, halfExtents)&&Physics.CheckBox(position, halfExtents_max))
+                {
+                    int random_rotate = Random.Range(0, 4); 
+                    Vector3 rotation = new Vector3(0, random_rotate*90, 0);
+                    Quaternion rotation_quaternion = Quaternion.Euler(rotation);
+                    GameObject instance = Instantiate(boss_room, position, rotation_quaternion);
+                    instance.tag = "BossRoom";
+                    spawned_prefabs.Add(instance);
+                    room_bounds.Add(GetRoomBounds(instance));
+                    break;
+                }
+            }
     }
     void Generate_room()
     {
@@ -685,6 +912,7 @@ public class Room_spawn : MonoBehaviour
                 if (!Physics.CheckBox(position, halfExtents)&&Physics.CheckBox(position, halfExtents_max))
                 {
                     GameObject instance = Instantiate(prefab, position, rotation_quaternion);
+                    instance.tag = "Room";
                     // CreateRoom_Wall(instance);
                     spawned_prefabs.Add(instance);
                     room_bounds.Add(GetRoomBounds(instance));
@@ -726,6 +954,32 @@ public class Room_spawn : MonoBehaviour
         
         return new Bounds(center, size);
     }
+    void place_navigation()
+    {
+        foreach (GameObject prefab in spawned_prefabs)
+        {
+            foreach (Transform child in prefab.transform)
+            {
+                if(child.name == "plain")
+                {
+                    NavMeshSurface surface = child.gameObject.AddComponent<NavMeshSurface>();
+                    surface.BuildNavMesh();
 
+                }
+                else
+                {
+                    NavMeshObstacle obstacle = child.gameObject.AddComponent<NavMeshObstacle>();
+                    obstacle.carving = true;
+                    obstacle.shape = NavMeshObstacleShape.Box;
+                }
+            }
+        }
+
+        foreach(GameObject road in road_prefabs)
+        {
+            NavMeshSurface surface = road.gameObject.AddComponent<NavMeshSurface>();
+            surface.BuildNavMesh();
+        }
+    }
 }
 
