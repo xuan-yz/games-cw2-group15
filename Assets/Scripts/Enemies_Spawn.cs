@@ -15,20 +15,19 @@ public class Enemies_Spawn : MonoBehaviour
     public GameObject BossRoom;
     public GameObject PlayerPrefab;
     public GameObject BossPrefab;
-    public List<GameObject> EnemyPrefabs = new List<GameObject>();
-    public bool Spawn_Enemies = false;
+    public bool SpawnEnemies = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Spawn_Enemies = false;
+        SpawnEnemies = false;
     }
-    void Update()
+    void Upgrade()
     {
-        if (Spawn_Enemies)
+        if (SpawnEnemies)
         {
             StartCoroutine(StartSpawn());
-            Spawn_Enemies = false;
+            SpawnEnemies = false;
         }
     }
     
@@ -40,26 +39,22 @@ public class Enemies_Spawn : MonoBehaviour
         PlayerPrefab = Resources.Load<GameObject>("Player");
         BossPrefab = Resources.Load<GameObject>("Boss");
         NormalRooms = new List<GameObject>(GameObject.FindGameObjectsWithTag("Room"));
-
-        SpawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
-        Bounds spawnBound = GetRoomBounds(SpawnPoint);
-        SpawnPlayer(spawnBound.center); 
-
         foreach (GameObject room in NormalRooms)
         {
             Bounds roomBound = GetRoomBounds(room);
             int NumberOfEnemies = Random.Range(minEnemies, maxEnemies + 1);
-
+            float RandomX = Random.Range(roomBound.min.x, roomBound.max.x);
+            float RandomZ = Random.Range(roomBound.min.z, roomBound.max.z);
+            Vector3 Position = new Vector3(RandomX, 10f, RandomZ);
             for (int i = 0; i < NumberOfEnemies; i++)
             {
-                float RandomX = Random.Range(roomBound.min.x+2f, roomBound.max.x-2f);
-                float RandomZ = Random.Range(roomBound.min.z+2f, roomBound.max.z-2f);
-                Vector3 Position = new Vector3(RandomX, 1f, RandomZ);
                 SpawnEnemy(Position);
             }
         }
 
-        
+        SpawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
+        Bounds spawnBound = GetRoomBounds(SpawnPoint);
+        SpawnPlayer(spawnBound.center); 
 
         BossRoom = GameObject.FindGameObjectWithTag("BossRoom");
         Bounds bossBound = GetRoomBounds(BossRoom);
@@ -106,73 +101,16 @@ public class Enemies_Spawn : MonoBehaviour
     }
     void SpawnEnemy(Vector3 Position)
     {
-        string path = "Assets\\EnemyAIs";
-        string fullPath = Path.Combine(Application.dataPath, "EnemyAIs");
-        string[] blenderFiles = Directory.GetFiles(fullPath, "*.prefab", SearchOption.TopDirectoryOnly);
-        if (blenderFiles.Length == 0)
-        {
-            Debug.LogError("No prefab files found in " + path);
-            return;
-        }
-        else
-        {
-            string randomPrefabPath = blenderFiles[Random.Range(0, blenderFiles.Length)];
-            string assetPath = "Assets/EnemyAIs/" + Path.GetFileName(randomPrefabPath);
-            GameObject enemyPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
-            if (enemyPrefab != null)
-            {
-                GameObject enemy = Instantiate(enemyPrefab, Position, Quaternion.identity);
-                enemy.tag = "Enemy";
-                NavMeshSurface surface = FindObjectOfType<NavMeshSurface>();
-            }
-            else
-            {
-                Debug.LogWarning("Failed to load prefab at " + assetPath);
-            }
-            EnemyPrefabs.Add(enemyPrefab);
-        }
+       
     }
     void SpawnPlayer(Vector3 Position)
     {
-        string fullPath = Path.Combine(Application.dataPath, "Player");
-        string playerPrefabPath = Directory.GetFiles(fullPath, "*.prefab", SearchOption.TopDirectoryOnly).FirstOrDefault();
-        if (playerPrefabPath == null)        {
-            Debug.LogError("No player prefab found in " + fullPath);
-            return;
-        }
-        string assetPath = "Assets/Player/" + Path.GetFileName(playerPrefabPath);
-        GameObject playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
-        if (playerPrefab != null)
-        {
-            GameObject player = Instantiate(playerPrefab, Position, Quaternion.identity);
-            player.tag = "Player";
-            EnemyPrefabs.Add(playerPrefab);
-        }
-        else
-        {
-            Debug.LogError("Failed to load player prefab at " + assetPath);
-        }
+        GameObject player = Instantiate(PlayerPrefab, Position, Quaternion.identity);
+        NavMeshSurface surface = FindObjectOfType<NavMeshSurface>();
     }
     void SpawnBoss(Vector3 Position)
     {
-        string fullPath = Path.Combine(Application.dataPath, "Boss");
-        string bossPrefabPath = Directory.GetFiles(fullPath, "*.prefab", SearchOption.TopDirectoryOnly).FirstOrDefault();
-        if (bossPrefabPath == null)
-        {
-            Debug.LogError("No boss prefab found in " + fullPath);
-            return;
-        }
-        string assetPath = "Assets/Boss/" + Path.GetFileName(bossPrefabPath);
-        GameObject bossPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
-        if (bossPrefab != null)
-        {
-            GameObject boss = Instantiate(bossPrefab, Position, Quaternion.identity);
-            boss.tag = "Boss";
-            EnemyPrefabs.Add(bossPrefab);
-        }
-        else
-        {
-            Debug.LogError("Failed to load boss prefab at " + assetPath);
-        }
+        GameObject boss = Instantiate(BossPrefab, Position, Quaternion.identity);
+         NavMeshSurface surface = FindObjectOfType<NavMeshSurface>();
     }
 }

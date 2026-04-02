@@ -129,8 +129,6 @@ GameObject:
   m_Component:
   - component: {fileID: 783678109}
   - component: {fileID: 783678110}
-  - component: {fileID: 783678111}
-  - component: {fileID: 783678112}
   m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
@@ -165,16 +163,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92fcdcc218fb0554da15a6136f7fbbf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Room_spawn
-  maxX: 25
-  maxZ: 25
-  minX: -25
-  minZ: -25
+  maxX: 250
+  maxZ: 250
+  minX: -250
+  minZ: -250
   attempts_spawn: 50
-  least_distance: 15
-  max_distance: 25
+  least_distance: 70
+  max_distance: 150
   Start_spawn: 0
-  Road_length: 1
-  wall_height: 2
+  Road_length: 10
+  wall_height: 10
   spawned_prefabs: []
   road_prefabs: []
   road_bounds: []
@@ -182,39 +180,6 @@ MonoBehaviour:
   turning_points: []
   wall_material: {fileID: 0}
   floor_material: {fileID: 0}
---- !u!114 &783678111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 783678107}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b72ffd39fa5eec4c92119ad0e2c33de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Enemies_Spawn
-  maxEnemies: 5
-  minEnemies: 1
-  NormalRooms: []
-  SpawnPoint: {fileID: 0}
-  BossRoom: {fileID: 0}
-  PlayerPrefab: {fileID: 0}
-  BossPrefab: {fileID: 0}
-  EnemyPrefabs: []
-  Spawn_Enemies: 0
---- !u!114 &783678112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 783678107}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70df550689bd1cb48a14172868924ab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
