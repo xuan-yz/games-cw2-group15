@@ -140,6 +140,7 @@ public void UpdateUI()
         UI.SetActive(true);
         Cursor.lockState = CursorLockMode.Locked;
         Time.timeScale = 1;
+        UpdateUI();
     }
 
     public void E()
