@@ -17,14 +17,17 @@ public class playerUI : MonoBehaviour
 
     public GameObject levelUpPanel;
     public GameObject gameOverPanel;
+    public GameObject mainMenu;
+    public GameObject UI;
+
+
     
     [Header("Data Reference")]
     public playerStats stats; 
     void Start()
     {
         stats.ResetStats();
-        UpdateUI(); 
-        Time.timeScale = 1;
+        MainMenu();
     }
 
     // Update is called once per frame
@@ -52,9 +55,8 @@ public void UpdateUI()
     public void TakeDamage(int damage)
     {
         stats.currentHP -= damage;
-        if(stats.currentHP < 0)
+        if(stats.currentHP <= 0)
         {
-            stats.currentHP = 0;
             TriggerGameOver();
         }
 
@@ -112,7 +114,7 @@ public void UpdateUI()
     }
 
     public void IncreaseMS(){
-        stats.moveSpeed += 5;
+        stats.moveSpeed += 10;
         Time.timeScale = 1;
         levelUpPanel.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
@@ -123,5 +125,44 @@ public void UpdateUI()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    public void MainMenu()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Time.timeScale = 0;
+        UI.SetActive(false);
+        mainMenu.SetActive(true);
+    }
+
+    public void startGame()
+    {
+        mainMenu.SetActive(false);
+        UI.SetActive(true);
+        Cursor.lockState = CursorLockMode.Locked;
+        Time.timeScale = 1;
+        UpdateUI();
+    }
+
+    public void E()
+    {
+        stats.maxHP = 150;
+        stats.currentHP = 150;
+
+    }
+
+    public void M()
+    {
+        stats.maxHP = 100;
+        stats.currentHP = 100;
+
+    }
+
+    public void H()
+    {
+        stats.maxHP = 50;
+        stats.currentHP = 50;
+
+    }
+
 
 }

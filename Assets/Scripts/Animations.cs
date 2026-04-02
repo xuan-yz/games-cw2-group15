@@ -10,15 +10,13 @@ public class AnimationStateController : MonoBehaviour
     public CharacterController controller;
     public PlayerController movementScript;
 
-    [Header("Hitboxes")]
-    public MeleeHitbox hitbox;
-
     [Header("Attack Settings")]
-    public int dmg;
-    public float Knockback;
     public float punchCooldown = 0.5f;
     public float kickCooldown = 0.8f;
 
+    [Header("Damage Values")]
+    public int punchDamage = 10;
+    public int kickDamage = 20;
 
     [Header("Settings")]
     public float dampening = 0.1f;
@@ -33,8 +31,8 @@ public class AnimationStateController : MonoBehaviour
         //I was trying to figure out why this wasnt working and it was because i hadnt linked the code to the character....
         //Debug.LogError("working");
         //checks because it doesnt seem to work
-        //if (animator == null) Debug.LogError("Animator not found on child");
-        //if (movementScript == null) Debug.LogError("PlayerController script not found!");
+        if (animator == null) Debug.LogError("Animator not found on child");
+        if (movementScript == null) Debug.LogError("PlayerController script not found!");
     }
 
     void Update()
@@ -68,10 +66,8 @@ public class AnimationStateController : MonoBehaviour
         animator.SetTrigger(triggerName);
 
         Debug.Log("Performed " + triggerName + "!");
-        yield return new WaitForSeconds(0.2f);
-        hitbox.Activate(dmg, Knockback);
-        yield return new WaitForSeconds(cooldown-.2f);
-        hitbox.Deactivate();
+
+        yield return new WaitForSeconds(cooldown);
 
         animator.SetBool("isAttacking", false);
     }

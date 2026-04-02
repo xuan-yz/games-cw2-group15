@@ -1,51 +1,65 @@
 using UnityEngine;
 
-public class MeleeHitbox : MonoBehaviour
+public class PlayerCombat : MonoBehaviour
 {
-    public float knockback;
-    public int damage;
-    public MeshCollider hitboxCollider;
-    public MeshRenderer MR;
-    
-    void Awake()
-    {
-        hitboxCollider.enabled = false;
+    public playerStats stats; 
+    public Transform origin; 
+    public GameObject hitEffectPrefab;
+    public float attackRange = 2f;
 
-    }
-    public void Activate(int dmg, float kb)
+    [Header("Kick Attack")]
+    public float kickForce = 20f;
+
+    void Update()
     {
-        knockback = kb;
-        damage = dmg;
-        hitboxCollider.enabled = true;
-        MR.enabled = true;
-    }
-    public void Deactivate()
-    {
-        hitboxCollider.enabled = false;
-        MR.enabled= false;
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        
-        // Check if we are mid-swing and hitting an Enemy
-        if (hitboxCollider.enabled && other.CompareTag("Boss"))
+        if (Input.GetButtonDown("Fire1"))
         {
-            Rigidbody enemyRb = other.GetComponent<Rigidbody>();
+            Shoot();
+        }
 
-            if (enemyRb != null)
-            {
-
-                Vector3 direction = (other.transform.position - transform.position).normalized;
-                direction.y = 0.2f;
-
-                enemyRb.AddForce(direction * knockback, ForceMode.Impulse);
-
-                Debug.Log("Knockback applied to " + other.name);
-            }
-
-            
-            Deactivate();
+        if (Input.GetMouseButtonDown(1))
+        {
+            Kick();
         }
     }
+
+    void Shoot()
+    {
+        HitTarget(applyKnockback: false);
+    }
+
+    void Kick()
+    {
+        HitTarget(applyKnockback: true);
+    }
+
+    void HitTarget(bool applyKnockback)
+    {
+        RaycastHit hit;
+
+        if (Physics.Raycast(origin.position, origin.forward, out hit, attackRange))
+        {
+            Debug.Log("We hit: " + hit.transform.name);
+
+            BaseEnemy target = hit.transform.GetComponentInParent<BaseEnemy>();
+            target.TakeDamage(stats.damage);
+            if (applyKnockback)
+            {
+                ApplyKnockback(hit);
+            }
+            Instantiate(hitEffectPrefab, hit.point, Quaternion.LookRotation(hit.normal));
+        }
+    }
+
+    void ApplyKnockback(RaycastHit hit)
+    {
+        Vector3 kickDirection = (hit.transform.position - transform.position).normalized;
+        kickDirection.y = 0f;
+
+        Vector3 kickImpulse = kickDirection * kickForce + Vector3.up;
+
+        Rigidbody targetRigidbody = hit.transform.GetComponentInParent<Rigidbody>();
+        targetRigidbody.AddForce(kickImpulse, ForceMode.Impulse);
     
+    }
 }
