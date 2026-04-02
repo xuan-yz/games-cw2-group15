@@ -170,8 +170,8 @@ MonoBehaviour:
   minX: -25
   minZ: -25
   attempts_spawn: 50
-  least_distance: 7
-  max_distance: 15
+  least_distance: 15
+  max_distance: 25
   Start_spawn: 0
   Road_length: 1
   wall_height: 2
@@ -215,9 +215,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70df550689bd1cb48a14172868924ab1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
-  roomSpawn: {fileID: 0}
-  enemySpawn: {fileID: 0}
-  start: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

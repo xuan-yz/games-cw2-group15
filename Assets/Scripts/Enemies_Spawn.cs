@@ -146,6 +146,7 @@ public class Enemies_Spawn : MonoBehaviour
         {
             GameObject player = Instantiate(playerPrefab, Position, Quaternion.identity);
             player.tag = "Player";
+            EnemyPrefabs.Add(playerPrefab);
         }
         else
         {
@@ -167,6 +168,7 @@ public class Enemies_Spawn : MonoBehaviour
         {
             GameObject boss = Instantiate(bossPrefab, Position, Quaternion.identity);
             boss.tag = "Boss";
+            EnemyPrefabs.Add(bossPrefab);
         }
         else
         {
