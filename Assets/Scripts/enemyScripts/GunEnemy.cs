@@ -6,21 +6,24 @@ public class GunEnemy : BaseEnemy
 {
     [Header("Pistol Settings")]
     public float preferredRange = 10f;
-    public float aimDuration = 2f;
     public float retreatDistance = 5f;
 
-    [Header("Laser")]
-    private Vector3 lockedTargetPosition;
+    [Header("Laser & Timing")]
+    public float trackingDuration = 1.0f;
+    public float lockDuration = 1.0f;
     public float laserWidth = 0.2f;
+    
     public Color laserAimColor = Color.red;
     public Color laserFireColor = Color.white;
 
     private LineRenderer laserRenderer;
     public Transform headBone;
     private bool isAiming = false;
+    private Vector3 lockedTargetPosition;
 
     protected override void Start()
     {
+        // Default stats
         maxHealth = 60f;
         attackDamage = 20f;
         attackRange = 15f;
@@ -30,12 +33,21 @@ public class GunEnemy : BaseEnemy
 
         base.Start();
         SetupLaser();
-        // FindHeadBone(); //Manually assign head bone in inspector
     }
 
     private void SetupLaser()
     {
-        laserRenderer = gameObject.AddComponent<LineRenderer>();
+        if (headBone == null)
+        {
+            Debug.LogError("GunEnemy: headBone not assigned in Inspector");
+            return;
+        }
+
+        // Add or get LineRenderer
+        laserRenderer = headBone.gameObject.GetComponent<LineRenderer>();
+        if (laserRenderer == null)
+            laserRenderer = headBone.gameObject.AddComponent<LineRenderer>();
+
         laserRenderer.startWidth = laserWidth;
         laserRenderer.endWidth = laserWidth;
         laserRenderer.material = new Material(Shader.Find("Sprites/Default"));
@@ -46,29 +58,6 @@ public class GunEnemy : BaseEnemy
         laserRenderer.useWorldSpace = true;
     }
 
-    private void FindHeadBone()
-    {
-        if (headBone != null) return;
-
-        headBone = FindBoneByName(transform, "BodyGuard02_Head");
-
-        if (headBone == null)
-        {
-            headBone = transform;
-            Debug.LogWarning("GunEnemy: Head bone not found");
-        }
-    }
-
-    private Transform FindBoneByName(Transform root, string name)
-    {
-        foreach (Transform t in root.GetComponentsInChildren<Transform>())
-        {
-            if (t.name == name)
-                return t;
-        }
-        return null;
-    }
-
     protected override void HandleChasing()
     {
         if (isAiming) return;
@@ -77,7 +66,7 @@ public class GunEnemy : BaseEnemy
 
         if (distance > detectionRange)
         {
-            agent.SetDestination(transform.position);
+            agent.ResetPath();
             animator.SetFloat("Speed", 0f);
             currentState = EnemyState.Idle;
             return;
@@ -94,7 +83,7 @@ public class GunEnemy : BaseEnemy
 
         if (distance <= preferredRange)
         {
-            agent.SetDestination(transform.position);
+            agent.ResetPath();
             animator.SetFloat("Speed", 0f);
             currentState = EnemyState.Attacking;
             return;
@@ -112,13 +101,7 @@ public class GunEnemy : BaseEnemy
 
         float distance = DistanceToPlayer();
 
-        if (distance > preferredRange + 1f)
-        {
-            currentState = EnemyState.Chasing;
-            return;
-        }
-
-        if (distance < preferredRange * 0.5f)
+        if (distance > preferredRange + 1f || distance < preferredRange * 0.5f)
         {
             currentState = EnemyState.Chasing;
             return;
@@ -134,18 +117,28 @@ public class GunEnemy : BaseEnemy
     {
         isAiming = true;
         lastAttackTime = Time.time;
-
-        lockedTargetPosition = player.position;
-
         laserRenderer.enabled = true;
 
         float elapsed = 0f;
-
-        while (elapsed < aimDuration)
+        while (elapsed < trackingDuration)
         {
-            UpdateLaser();
+            lockedTargetPosition = player.position; 
+            FacePlayer();
+            UpdateLaserVisuals(lockedTargetPosition);
 
-            float t = elapsed / aimDuration;
+            laserRenderer.startColor = laserAimColor;
+            laserRenderer.endColor = laserAimColor;
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        elapsed = 0f;
+        while (elapsed < lockDuration)
+        {
+            UpdateLaserVisuals(lockedTargetPosition);
+
+            float t = elapsed / lockDuration;
             Color currentColor = Color.Lerp(laserAimColor, laserFireColor, t);
             laserRenderer.startColor = currentColor;
             laserRenderer.endColor = currentColor;
@@ -153,9 +146,11 @@ public class GunEnemy : BaseEnemy
             elapsed += Time.deltaTime;
             yield return null;
         }
-        // Fire at the locked position
-        FireRaycast();
-        AudioManager.Instance.PlayGunshot();
+
+        FireAtPosition(lockedTargetPosition);
+        
+        if(AudioManager.Instance != null)
+            AudioManager.Instance.PlayGunshot();
 
         laserRenderer.startColor = laserFireColor;
         laserRenderer.endColor = laserFireColor;
@@ -165,12 +160,12 @@ public class GunEnemy : BaseEnemy
         isAiming = false;
     }
 
-    private void UpdateLaser()
+    private void UpdateLaserVisuals(Vector3 targetPoint)
     {
         if (headBone == null) return;
 
-        Vector3 origin = headBone.position + Vector3.up * 0.1f;
-        Vector3 direction = (lockedTargetPosition - origin).normalized;
+        Vector3 origin = headBone.position;
+        Vector3 direction = (targetPoint - origin).normalized;
 
         laserRenderer.SetPosition(0, origin);
 
@@ -180,28 +175,28 @@ public class GunEnemy : BaseEnemy
             laserRenderer.SetPosition(1, origin + direction * attackRange);
     }
 
-    private void FireRaycast()
+    private void FireAtPosition(Vector3 targetPoint)
     {
         if (headBone == null) return;
 
-        Vector3 origin = headBone.position + Vector3.up * 0.1f;
-        Vector3 direction = (lockedTargetPosition - origin).normalized;
+        Vector3 origin = headBone.position;
+        Vector3 direction = (targetPoint - origin).normalized;
 
         if (Physics.Raycast(origin, direction, out RaycastHit hit, attackRange))
         {
             if (hit.collider.CompareTag("Player"))
             {
-                playerUI.TakeDamage((int)attackDamage);
-                DamageVignette.Instance.Flash();
-                AudioManager.Instance.PlayPlayerHurt();
-                Debug.Log("GunEnemy hit player");
+                if(playerUI != null) playerUI.TakeDamage((int)attackDamage);
+                if(DamageVignette.Instance != null) DamageVignette.Instance.Flash();
+                if(AudioManager.Instance != null) AudioManager.Instance.PlayPlayerHurt();
+                Debug.Log("GunEnemy hit player!");
             }
         }
     }
 
     protected override void HandleIdle()
     {
-        if (laserRenderer.enabled)
+        if (laserRenderer != null && laserRenderer.enabled && !isAiming)
             laserRenderer.enabled = false;
 
         base.HandleIdle();

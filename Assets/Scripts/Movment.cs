@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyMovement()
     {
-        Vector3 Movement = (moveDir * moveSpeed) + velocity;
+        Vector3 Movement = (moveDir * stats.moveSpeed) + velocity;
         controller.Move(Movement * Time.deltaTime);
     }
 }

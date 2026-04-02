@@ -117,7 +117,7 @@ public void UpdateUI()
     }
 
     public void IncreaseMS(){
-        stats.moveSpeed += 10;
+        stats.moveSpeed += 3;
         Time.timeScale = 1;
         levelUpPanel.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;

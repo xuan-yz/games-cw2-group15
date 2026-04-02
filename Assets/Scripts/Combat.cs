@@ -13,7 +13,7 @@ public class PlayerCombat : MonoBehaviour
     public float attackCooldown = 0.6f;
 
     [Header("Kick Attack")]
-    public float kickForce = 20;
+    public float kickForce = 15;
     public float kickCooldown = 0.8f;
 
     private bool canPunch = true;

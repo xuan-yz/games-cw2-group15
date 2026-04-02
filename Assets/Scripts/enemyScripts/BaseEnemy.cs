@@ -31,21 +31,40 @@ public class BaseEnemy : MonoBehaviour
     protected float lastAttackTime;
     protected EnemyState currentState = EnemyState.Idle;
 
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
+    }
+
+    protected virtual void Start()
+    {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         playerUI = player.GetComponent<playerUI>();
 
         currentHealth = maxHealth;
         agent.speed = moveSpeed;
+        agent.stoppingDistance = attackRange * 0.9f;
+
+        if (EnemyManager.Instance == null)
+        {
+            Debug.LogError(gameObject.name + ": EnemyManager is null");
+            return;
+        }
+
+        if (player == null)
+        {
+            Debug.LogError(gameObject.name + ": Player not found — is it tagged Player?");
+            return;
+        }
 
         EnemyManager.Instance.RegisterEnemy(this);
     }
 
     protected virtual void Update()
     {
+        if (player == null) return;
+
         switch (currentState)
         {
             case EnemyState.Idle:      HandleIdle();      break;
@@ -67,7 +86,7 @@ public class BaseEnemy : MonoBehaviour
 
         if (distance > detectionRange)
         {
-            agent.SetDestination(transform.position);
+            agent.ResetPath();
             animator.SetFloat("Speed", 0f);
             currentState = EnemyState.Idle;
             return;
@@ -75,7 +94,7 @@ public class BaseEnemy : MonoBehaviour
 
         if (distance <= attackRange)
         {
-            agent.SetDestination(transform.position);
+            agent.ResetPath();
             animator.SetFloat("Speed", 0f);
             currentState = EnemyState.Attacking;
             return;
