@@ -5,11 +5,6 @@ TagManager:
   serializedVersion: 3
   tags:
   - Boss
-  - Turrning
-  - BossRoom
-  - Room
-  - SpawnPoint
-  - target
   - Enemy
   layers:
   - Default
