@@ -3,7 +3,7 @@ using UnityEngine;
 public class MouseMovment: MonoBehaviour
 {
     [Header("Settings")]
-    public float mouseSensitivity = 100f;
+    public float mouseSensitivity = 25f;
     public Transform playerBody; // Drag your Player object here in the Inspector
 
     float xRotation = 0f;
