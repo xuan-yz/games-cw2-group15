@@ -165,44 +165,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92fcdcc218fb0554da15a6136f7fbbf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Room_spawn
-  maxX: 250
-  maxZ: 250
-  minX: -250
-  minZ: -250
+  maxX: 25
+  maxZ: 25
+  minX: -25
+  minZ: -25
   attempts_spawn: 50
-  least_distance: 70
+  least_distance: 7
+  max_distance: 15
   Start_spawn: 0
-  Road_length: 10
-  wall_height: 10
---- !u!1 &838699018
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 838699022}
-  - component: {fileID: 838699021}
-  - component: {fileID: 838699020}
-  - component: {fileID: 838699019}
-  m_Layer: 0
-  m_Name: Camera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &838699019
+  Road_length: 1
+  wall_height: 2
+  spawned_prefabs: []
+  road_prefabs: []
+  road_bounds: []
+  room_bounds: []
+  turning_points: []
+  wall_material: {fileID: 0}
+  floor_material: {fileID: 0}
+--- !u!114 &783678111
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 838699018}
+  m_GameObject: {fileID: 783678107}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b72ffd39fa5eec4c92119ad0e2c33de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemies_Spawn
   maxEnemies: 5
@@ -234,4 +223,3 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 783678109}
-  - {fileID: 838699022}

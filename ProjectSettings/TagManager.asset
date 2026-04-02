@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Boss
   - Enemy
+  - Turrning
+  - Room
+  - BossRoom
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX
