@@ -27,7 +27,7 @@ public class BossManager : MonoBehaviour
     }
     void Update()
     {
-        currentState.updateState(this);
+        // currentState.updateState(this);
 
     }
 

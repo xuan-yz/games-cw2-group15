@@ -11,11 +11,11 @@ public class BulletLogic : MonoBehaviour
         Destroy(gameObject, life);
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        // Player UI/health logic may be on a parent object instead of the collider itself.
-        playerUI ui = other.gameObject.GetComponentInParent<playerUI>();
-        ui.TakeDamage(damage);
-        Destroy(gameObject); 
-    }
+//     void OnTriggerEnter(Collider other)
+//     {
+//         // Player UI/health logic may be on a parent object instead of the collider itself.
+//         playerUI ui = other.gameObject.GetComponentInParent<playerUI>();
+//         ui.TakeDamage(damage);
+//         Destroy(gameObject); 
+//     }
 }
